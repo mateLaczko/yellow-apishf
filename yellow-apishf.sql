@@ -1,10 +1,10 @@
 -- phpMyAdmin SQL Dump
--- version 4.7.0
+-- version 4.7.4
 -- https://www.phpmyadmin.net/
 --
--- Gép: 127.0.0.1
--- Létrehozás ideje: 2017. Nov 01. 14:39
--- Kiszolgáló verziója: 10.1.25-MariaDB
+-- Gép: 127.0.0.1:3306
+-- Létrehozás ideje: 2017. Nov 01. 13:59
+-- Kiszolgáló verziója: 5.7.19
 -- PHP verzió: 5.6.31
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -28,10 +28,12 @@ SET time_zone = "+00:00";
 -- Tábla szerkezet ehhez a táblához `currency`
 --
 
-CREATE TABLE `currency` (
-  `currency_id` int(11) NOT NULL,
-  `currency_name` varchar(10) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+DROP TABLE IF EXISTS `currency`;
+CREATE TABLE IF NOT EXISTS `currency` (
+  `currency_id` int(11) NOT NULL AUTO_INCREMENT,
+  `currency_name` varchar(100) NOT NULL,
+  PRIMARY KEY (`currency_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
 -- A tábla adatainak kiíratása `currency`
@@ -46,11 +48,13 @@ INSERT INTO `currency` (`currency_id`, `currency_name`) VALUES
 -- Tábla szerkezet ehhez a táblához `customers`
 --
 
-CREATE TABLE `customers` (
-  `customer_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `customers`;
+CREATE TABLE IF NOT EXISTS `customers` (
+  `customer_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_name` varchar(100) NOT NULL,
   `customer_email` varchar(100) NOT NULL,
-  `customer_password` varchar(100) NOT NULL
+  `customer_password` varchar(100) NOT NULL,
+  PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -59,14 +63,18 @@ CREATE TABLE `customers` (
 -- Tábla szerkezet ehhez a táblához `orders`
 --
 
-CREATE TABLE `orders` (
-  `order_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `orders`;
+CREATE TABLE IF NOT EXISTS `orders` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_date` datetime NOT NULL,
   `customer_id` int(11) NOT NULL,
   `product_id` int(11) NOT NULL,
   `ordered_quantity` int(11) NOT NULL,
   `price_id` int(11) NOT NULL,
-  `currency_id` int(11) NOT NULL
+  PRIMARY KEY (`order_id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `price_id` (`price_id`),
+  KEY `product_id` (`product_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -75,12 +83,16 @@ CREATE TABLE `orders` (
 -- Tábla szerkezet ehhez a táblához `prices`
 --
 
-CREATE TABLE `prices` (
-  `price_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `prices`;
+CREATE TABLE IF NOT EXISTS `prices` (
+  `price_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_id` int(11) NOT NULL,
   `price_value` float NOT NULL,
-  `currency_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `currency_id` int(11) NOT NULL,
+  PRIMARY KEY (`price_id`),
+  KEY `product_id` (`product_id`),
+  KEY `currency_id` (`currency_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- A tábla adatainak kiíratása `prices`
@@ -109,12 +121,16 @@ INSERT INTO `prices` (`price_id`, `product_id`, `price_value`, `currency_id`) VA
 -- Tábla szerkezet ehhez a táblához `products`
 --
 
-CREATE TABLE `products` (
-  `product_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `products`;
+CREATE TABLE IF NOT EXISTS `products` (
+  `product_id` int(11) NOT NULL AUTO_INCREMENT,
   `product_name` varchar(100) NOT NULL,
   `price_id` int(11) NOT NULL,
-  `currency_id` int(11) NOT NULL
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+  `currency_id` int(11) NOT NULL,
+  PRIMARY KEY (`product_id`),
+  KEY `price_id` (`price_id`),
+  KEY `currency_id` (`currency_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- A tábla adatainak kiíratása `products`
@@ -143,94 +159,24 @@ INSERT INTO `products` (`product_id`, `product_name`, `price_id`, `currency_id`)
 -- Tábla szerkezet ehhez a táblához `users`
 --
 
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE IF NOT EXISTS `users` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(100) NOT NULL,
   `user_email` varchar(100) NOT NULL,
-  `user_password` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Felhasználók adatai';
+  `user_password` varchar(100) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Felhasználók adatai';
 
 --
--- Indexek a kiírt táblákhoz
+-- A tábla adatainak kiíratása `users`
 --
 
---
--- A tábla indexei `currency`
---
-ALTER TABLE `currency`
-  ADD PRIMARY KEY (`currency_id`);
-
---
--- A tábla indexei `customers`
---
-ALTER TABLE `customers`
-  ADD PRIMARY KEY (`customer_id`);
-
---
--- A tábla indexei `orders`
---
-ALTER TABLE `orders`
-  ADD PRIMARY KEY (`order_id`),
-  ADD KEY `customer_id` (`customer_id`),
-  ADD KEY `price_id` (`price_id`),
-  ADD KEY `product_id` (`product_id`);
-
---
--- A tábla indexei `prices`
---
-ALTER TABLE `prices`
-  ADD PRIMARY KEY (`price_id`),
-  ADD KEY `product_id` (`product_id`),
-  ADD KEY `currency_id` (`currency_id`);
-
---
--- A tábla indexei `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`product_id`),
-  ADD KEY `price_id` (`price_id`),
-  ADD KEY `currency_id` (`currency_id`);
-
---
--- A tábla indexei `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
-
---
--- A kiírt táblák AUTO_INCREMENT értéke
---
-
---
--- AUTO_INCREMENT a táblához `currency`
---
-ALTER TABLE `currency`
-  MODIFY `currency_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
--- AUTO_INCREMENT a táblához `customers`
---
-ALTER TABLE `customers`
-  MODIFY `customer_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT a táblához `orders`
---
-ALTER TABLE `orders`
-  MODIFY `order_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT a táblához `prices`
---
-ALTER TABLE `prices`
-  MODIFY `price_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
---
--- AUTO_INCREMENT a táblához `products`
---
-ALTER TABLE `products`
-  MODIFY `product_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
---
--- AUTO_INCREMENT a táblához `users`
---
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;COMMIT;
+INSERT INTO `users` (`user_id`, `user_name`, `user_email`, `user_password`) VALUES
+(1, 'Réka', 'reka@yellow.com', 'reka2017'),
+(2, 'Máté', 'mate@yellow.com', 'mate2017'),
+(3, 'Ildi', 'ildi@yellow.com', 'ildi2017');
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
