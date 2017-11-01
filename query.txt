@@ -1,0 +1,13 @@
+Melyik italból rendelték a legtöbbet, mennyit?
+Melyik italból rendelték a legkevesebbet, mennyit?
+Rendelt mennyiség terméknév szerint csoportosítva 
+Rendelt mennyiség dátum szerint csoportosítva 
+Havi átlagos rendelés értéke
+Egy rendelés átlagos értéke
+Adott hónapban hány rendelés volt?
+Milyen italokat redeltek adott idõszakban?
+Kik adtak le rendelést adott idõszakban?
+Rendelt mennyiség terméknév szerint csoportosítva 
+
+Esetleg:
+Új termék/vásárló hozzáadása/törlése
