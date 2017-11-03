@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1:3306
--- Létrehozás ideje: 2017. Nov 01. 15:07
+-- Létrehozás ideje: 2017. Nov 02. 19:08
 -- Kiszolgáló verziója: 5.7.19
 -- PHP verzió: 5.6.31
 
@@ -32,7 +32,8 @@ DROP TABLE IF EXISTS `currency`;
 CREATE TABLE IF NOT EXISTS `currency` (
   `currency_id` int(11) NOT NULL AUTO_INCREMENT,
   `currency_name` varchar(100) NOT NULL,
-  PRIMARY KEY (`currency_id`)
+  PRIMARY KEY (`currency_id`),
+  UNIQUE KEY `currency_name` (`currency_name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 --
@@ -54,7 +55,8 @@ CREATE TABLE IF NOT EXISTS `customers` (
   `customer_name` varchar(100) NOT NULL,
   `customer_email` varchar(100) NOT NULL,
   `customer_password` varchar(100) NOT NULL,
-  PRIMARY KEY (`customer_id`)
+  PRIMARY KEY (`customer_id`),
+  UNIQUE KEY `customer_email` (`customer_email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
@@ -95,57 +97,59 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `product_id` int(11) NOT NULL,
   `ordered_quantity` int(11) NOT NULL,
   `price_id` int(11) NOT NULL,
+  `currency_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`order_id`),
   KEY `customer_id` (`customer_id`),
   KEY `price_id` (`price_id`),
-  KEY `product_id` (`product_id`)
+  KEY `product_id` (`product_id`),
+  KEY `currency_id` (`currency_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 --
 -- A tábla adatainak kiíratása `orders`
 --
 
-INSERT INTO `orders` (`order_id`, `order_date`, `customer_id`, `product_id`, `ordered_quantity`, `price_id`) VALUES
-(1, '2017-09-01 17:27:23', 5, 10, 10, 10),
-(2, '2017-07-10 05:52:15', 18, 5, 23, 5),
-(3, '2017-10-31 05:17:06', 1, 15, 40, 15),
-(4, '2017-11-01 08:11:37', 2, 14, 20, 14),
-(5, '2017-11-01 08:13:40', 4, 4, 4, 4),
-(6, '2017-10-24 06:35:12', 5, 5, 5, 5),
-(7, '2017-10-25 23:37:08', 6, 6, 10, 6),
-(8, '2017-10-25 14:13:50', 7, 12, 12, 12),
-(9, '2017-10-16 10:10:41', 8, 8, 40, 8),
-(10, '2017-10-23 23:16:00', 9, 9, 15, 9),
-(11, '2017-10-14 11:10:34', 10, 10, 30, 10),
-(12, '2017-10-18 05:32:12', 11, 3, 11, 3),
-(13, '2017-10-16 14:18:45', 12, 12, 12, 12),
-(14, '2017-08-13 04:53:18', 13, 13, 13, 13),
-(15, '2017-02-13 08:47:17', 14, 14, 40, 14),
-(16, '2017-04-01 09:51:17', 15, 15, 100, 15),
-(17, '2017-11-01 09:44:26', 16, 1, 16, 1),
-(18, '2017-11-01 08:48:19', 17, 2, 42, 2),
-(19, '2017-08-02 11:11:53', 18, 3, 72, 3),
-(20, '2017-09-12 13:12:36', 1, 4, 4, 4),
-(21, '2017-10-10 03:38:28', 2, 4, 30, 4),
-(22, '2017-10-09 12:14:24', 4, 5, 50, 5),
-(23, '2017-10-17 12:10:13', 5, 6, 10, 6),
-(24, '2017-09-13 00:00:00', 6, 7, 8, 7),
-(25, '2017-09-11 23:10:20', 7, 8, 9, 8),
-(26, '2017-03-13 19:15:08', 8, 9, 10, 9),
-(27, '2017-09-12 04:21:00', 9, 10, 11, 10),
-(28, '2017-10-15 05:36:13', 10, 11, 12, 11),
-(29, '2017-06-13 14:49:11', 11, 12, 13, 12),
-(30, '2017-05-15 10:47:21', 12, 13, 14, 13),
-(31, '2017-05-03 23:19:00', 13, 14, 15, 14),
-(32, '2017-08-15 15:20:11', 14, 15, 15, 15),
-(33, '2017-08-31 20:13:06', 16, 1, 40, 1),
-(34, '2017-09-12 17:09:02', 17, 2, 25, 2),
-(35, '2017-08-05 09:17:00', 18, 3, 30, 3),
-(36, '2017-08-30 10:35:06', 1, 10, 10, 10),
-(37, '2017-10-02 09:56:12', 2, 9, 9, 9),
-(38, '2017-09-20 12:45:02', 4, 8, 16, 8),
-(39, '2017-08-26 17:43:09', 5, 7, 2, 7),
-(40, '2017-09-01 13:11:00', 6, 9, 10, 9);
+INSERT INTO `orders` (`order_id`, `order_date`, `customer_id`, `product_id`, `ordered_quantity`, `price_id`, `currency_id`) VALUES
+(1, '2017-09-01 17:27:23', 5, 10, 10, 10, 1),
+(2, '2017-07-10 05:52:15', 18, 5, 23, 5, 1),
+(3, '2017-10-31 05:17:06', 1, 15, 40, 15, 1),
+(4, '2017-11-01 08:11:37', 2, 14, 20, 14, 1),
+(5, '2017-11-01 08:13:40', 4, 4, 4, 4, 1),
+(6, '2017-10-24 06:35:12', 5, 5, 5, 5, 1),
+(7, '2017-10-25 23:37:08', 6, 6, 10, 6, 1),
+(8, '2017-10-25 14:13:50', 7, 12, 12, 12, 1),
+(9, '2017-10-16 10:10:41', 8, 8, 40, 8, 1),
+(10, '2017-10-23 23:16:00', 9, 9, 15, 9, 1),
+(11, '2017-10-14 11:10:34', 10, 10, 30, 10, 1),
+(12, '2017-10-18 05:32:12', 11, 3, 11, 3, 1),
+(13, '2017-10-16 14:18:45', 12, 12, 12, 12, 1),
+(14, '2017-08-13 04:53:18', 13, 13, 13, 13, 1),
+(15, '2017-02-13 08:47:17', 14, 14, 40, 14, 1),
+(16, '2017-04-01 09:51:17', 15, 15, 100, 15, 1),
+(17, '2017-11-01 09:44:26', 16, 1, 16, 1, 1),
+(18, '2017-11-01 08:48:19', 17, 2, 42, 2, 1),
+(19, '2017-08-02 11:11:53', 18, 3, 72, 3, 1),
+(20, '2017-09-12 13:12:36', 1, 4, 4, 4, 1),
+(21, '2017-10-10 03:38:28', 2, 4, 30, 4, 1),
+(22, '2017-10-09 12:14:24', 4, 5, 50, 5, 1),
+(23, '2017-10-17 12:10:13', 5, 6, 10, 6, 1),
+(24, '2017-09-13 00:00:00', 6, 7, 8, 7, 1),
+(25, '2017-09-11 23:10:20', 7, 8, 9, 8, 1),
+(26, '2017-03-13 19:15:08', 8, 9, 10, 9, 1),
+(27, '2017-09-12 04:21:00', 9, 10, 11, 10, 1),
+(28, '2017-10-15 05:36:13', 10, 11, 12, 11, 1),
+(29, '2017-06-13 14:49:11', 11, 12, 13, 12, 1),
+(30, '2017-05-15 10:47:21', 12, 13, 14, 13, 1),
+(31, '2017-05-03 23:19:00', 13, 14, 15, 14, 1),
+(32, '2017-08-15 15:20:11', 14, 15, 15, 15, 1),
+(33, '2017-08-31 20:13:06', 16, 1, 40, 1, 1),
+(34, '2017-09-12 17:09:02', 17, 2, 25, 2, 1),
+(35, '2017-08-05 09:17:00', 18, 3, 30, 3, 1),
+(36, '2017-08-30 10:35:06', 1, 10, 10, 10, 1),
+(37, '2017-10-02 09:56:12', 2, 9, 9, 9, 1),
+(38, '2017-09-20 12:45:02', 4, 8, 16, 8, 1),
+(39, '2017-08-26 17:43:09', 5, 7, 2, 7, 1),
+(40, '2017-09-01 13:11:00', 6, 9, 10, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -160,6 +164,7 @@ CREATE TABLE IF NOT EXISTS `prices` (
   `price_value` float NOT NULL,
   `currency_id` int(11) NOT NULL,
   PRIMARY KEY (`price_id`),
+  UNIQUE KEY `price_value` (`price_value`),
   KEY `product_id` (`product_id`),
   KEY `currency_id` (`currency_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
@@ -198,6 +203,7 @@ CREATE TABLE IF NOT EXISTS `products` (
   `price_id` int(11) NOT NULL,
   `currency_id` int(11) NOT NULL,
   PRIMARY KEY (`product_id`),
+  UNIQUE KEY `product_name` (`product_name`),
   KEY `price_id` (`price_id`),
   KEY `currency_id` (`currency_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
@@ -235,7 +241,8 @@ CREATE TABLE IF NOT EXISTS `users` (
   `user_name` varchar(100) NOT NULL,
   `user_email` varchar(100) NOT NULL,
   `user_password` varchar(100) NOT NULL,
-  PRIMARY KEY (`user_id`)
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `user_email` (`user_email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COMMENT='Felhasználók adatai';
 
 --
